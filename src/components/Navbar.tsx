@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion } from "motion/react";
 
 interface NavbarProps {
   activeSection: string;
@@ -22,6 +21,7 @@ export default function Navbar({ activeSection, onNavigate, onResumeClick }: Nav
   const links = [
     { label: "Home", target: "home" },
     { label: "Work", target: "work" },
+    { label: "Connect", target: "contact" },
   ];
 
   return (
@@ -79,24 +79,15 @@ export default function Navbar({ activeSection, onNavigate, onResumeClick }: Nav
               </button>
             );
           })}
-
-          {/* Resume Link */}
-          <button
-            id="nav-link-resume"
-            onClick={onResumeClick}
-            className="text-xs sm:text-sm font-medium rounded-full px-3 sm:px-4 py-1.5 text-muted hover:text-text-primary hover:bg-stroke/40 transition-all duration-200 cursor-pointer"
-          >
-            Resume
-          </button>
         </div>
 
         {/* 4. Divider */}
         <div className="w-px h-5 bg-stroke mx-2" />
 
-        {/* 5. "Say hi" button with gradient card border on hover */}
+        {/* 5. Featured CTA: Resume button */}
         <button
-          id="nav-contact-button"
-          onClick={() => onNavigate("contact")}
+          id="nav-resume-button"
+          onClick={onResumeClick}
           className="group relative inline-flex items-center justify-center rounded-full text-xs sm:text-sm font-bold h-9 px-4 cursor-pointer overflow-hidden transition-all duration-300"
         >
           {/* Absolute gradient border on hover */}
@@ -105,7 +96,7 @@ export default function Navbar({ activeSection, onNavigate, onResumeClick }: Nav
 
           {/* Inner content */}
           <span className="relative z-10 text-text-primary flex items-center gap-1">
-            <span>Connect </span>
+            <span>Resume</span>
             <span className="font-mono text-[10px] transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200">
               ↗
             </span>

@@ -146,7 +146,7 @@ function MainPortfolioContent() {
                 <div className="flex items-center gap-2">
                   {/* Download Mock CTA */}
                   <a
-  href="/Mayank_Kumar_Resume_internship.pdf"
+  href="/Mayank_s_Resume (1).pdf"
   target="_blank"
   rel="noopener noreferrer"
   className="flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-semibold uppercase tracking-wider text-[#89AACC] hover:text-text-primary hover:underline transition-all"

@@ -7,7 +7,7 @@ const JOURNAL_ENTRIES: JournalEntry[] = [
   {
     id: "entry-1",
     title: "Speculative design in high-entropy rendering networks",
-    category: "RESEARCH",
+    category: "Nvidia",
     image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&q=80&w=300",
     readTime: "5 Min Read",
     date: "Oct 24, 2026",
@@ -15,7 +15,7 @@ const JOURNAL_ENTRIES: JournalEntry[] = [
   {
     id: "entry-2",
     title: "Decentralized visual systems & algorithmic curation",
-    category: "THEORY",
+    category: "DataBricks",
     image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=300",
     readTime: "7 Min Read",
     date: "Sep 12, 2026",

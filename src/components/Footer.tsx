@@ -1,12 +1,36 @@
-import { useEffect, useRef, useState, MouseEvent } from "react";
+import { useEffect, useRef, useState, MouseEvent, FormEvent } from "react";
 import Hls from "hls.js";
 import gsap from "gsap";
-import { Mail, Check, Copy, Twitter, Linkedin, Dribbble, Github, Instagram } from "lucide-react";
+import {
+  Mail,
+  Check,
+  Copy,
+  Linkedin,
+  Github,
+  Instagram,
+  Loader2,
+  AlertCircle,
+  CheckCircle2,
+  ArrowRight,
+  ExternalLink,
+} from "lucide-react";
+import { supabase } from "../lib/supabase";
 
 export default function Footer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
+
+  // Form State
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
   // 1. Initialize HLS Video (flipped scale-y-[-1])
   useEffect(() => {
@@ -63,14 +87,12 @@ export default function Footer() {
   // Copy email helper
   const handleCopy = async (e: MouseEvent) => {
     e.preventDefault();
-
     const email = "mayankjangra2015@gmail.com";
 
     try {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(email);
       } else {
-        // Fallback for older browsers
         const textarea = document.createElement("textarea");
         textarea.value = email;
         textarea.setAttribute("readonly", "true");
@@ -81,15 +103,110 @@ export default function Footer() {
         document.execCommand("copy");
         document.body.removeChild(textarea);
       }
-
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err: unknown) {
       console.error("Failed to copy email:", err);
-
-      // Still show feedback so user knows something happened
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  // Form submission logic targeting Supabase
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!formData.fullName.trim() || !formData.email.trim() || !formData.message.trim()) {
+      setStatus({ type: "error", message: "Please fill in all required fields (Full Name, Email & Message)." });
+      return;
+    }
+
+    setLoading(true);
+    setStatus(null);
+
+    try {
+      // 1. Array of candidate table names to try, prioritizing 'contacts' and custom env table
+      const customTable = (import.meta as any).env?.VITE_SUPABASE_CONTACT_TABLE;
+      const candidateTables = Array.from(
+        new Set([
+          customTable,
+          "contacts",
+          "contact_messages",
+          "contact_me",
+          "messages",
+          "contact",
+        ].filter(Boolean) as string[])
+      );
+
+      let lastError: any = null;
+      let success = false;
+
+      for (const tableName of candidateTables) {
+        // Attempt A: with full_name & phone column
+        let res = await supabase.from(tableName).insert([
+          {
+            full_name: formData.fullName.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim() || null,
+            subject: formData.subject.trim() || "Portfolio Contact Form",
+            message: formData.message.trim(),
+          },
+        ]);
+
+        // Attempt B: if full_name / phone column is missing, insert with formatted message
+        if (
+          res.error &&
+          (res.error.message?.includes("full_name") || res.error.message?.includes("phone") || res.error.code === "PGRST204")
+        ) {
+          const phoneDetails = formData.phone.trim() ? `\nPhone: ${formData.phone.trim()}` : "";
+          res = await supabase.from(tableName).insert([
+            {
+              email: formData.email.trim(),
+              subject: `[${formData.fullName.trim()}] ${formData.subject.trim() || "Portfolio Contact"}`,
+              message: `Sender Name: ${formData.fullName.trim()}${phoneDetails}\n\nMessage:\n${formData.message.trim()}`,
+            },
+          ]);
+        }
+
+        if (!res.error) {
+          success = true;
+          break;
+        }
+
+        lastError = res.error;
+
+        // If error is NOT "table not found", stop iterating table names
+        const isTableNotFound =
+          res.error.code === "42P01" ||
+          res.error.code === "PGRST204" ||
+          res.error.code === "PGRST205" ||
+          res.error.message?.includes("schema cache") ||
+          res.error.message?.includes("relation");
+
+        if (!isTableNotFound) {
+          break;
+        }
+      }
+
+      if (!success) {
+        console.error("Supabase Submission Error:", lastError);
+        const errorMsg = lastError?.message || "Failed to submit message to Supabase.";
+        
+        if (errorMsg.includes("schema cache") || errorMsg.includes("relation")) {
+          throw new Error("Table not found in Supabase. Please ensure your Supabase table (e.g. 'contacts' or 'contact_messages') is created.");
+        }
+        throw new Error(errorMsg);
+      }
+
+      setStatus({ type: "success", message: "Your message has been sent successfully! I'll get back to you soon." });
+      setFormData({ fullName: "", email: "", phone: "", subject: "", message: "" });
+    } catch (err: any) {
+      console.error("Contact Form Error:", err);
+      setStatus({
+        type: "error",
+        message: err?.message || "Something went wrong while sending your message. Please try again.",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -146,52 +263,251 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Core CTA */}
-        <div className="max-w-xl text-center px-6 flex flex-col items-center mb-16 sm:mb-24">
-          <span className="text-[10px] sm:text-xs text-muted uppercase tracking-[0.3em] font-mono mb-4">
-            GET IN TOUCH
-          </span>
-          <h2 className="text-4xl sm:text-5xl font-light tracking-tight text-text-primary mb-8 font-sans">
-            Let's start the <span className="font-display italic">journey</span>
-          </h2>
+        {/* 2-Column Contact Section */}
+        <div className="w-full max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16 mb-16 sm:mb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            
+            {/* Left Column: Contact Me Info */}
+            <div className="lg:col-span-5 flex flex-col justify-between h-full">
+              <div>
+                <span className="text-[10px] sm:text-xs text-muted uppercase tracking-[0.3em] font-mono mb-4 block">
+                  CONTACT ME
+                </span>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight text-text-primary mb-6 font-sans leading-tight">
+                  {/* Have a project or opportunity? */<span className="font-display italic block sm:inline">Let's connect!</span> }
+                </h2>
+                <p className="text-xs sm:text-sm text-muted font-light leading-relaxed mb-8 max-w-md">
+                  Feel free to reach out for projects, internship, freelance opportunity, or collaboration in mind?
+                </p>
+              </div>
 
-          {/* Email button with gradient hover border ring */}
-          <div className="flex flex-col sm:flex-row gap-3 items-center">
-            <a
-              id="cta-email-mailto"
-href="mailto:mayankjangra2015@gmail.com"
-              className="group relative inline-flex items-center gap-3 bg-surface border border-stroke text-text-primary text-sm font-semibold rounded-full px-8 py-4 hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl"
-            >
-              {/* Outer gradient hover border ring */}
-              <span className="absolute -inset-[1.5px] bg-transparent rounded-full group-hover:accent-gradient -z-10 transition-all duration-300" />
-              <Mail className="w-4 h-4 text-[#89AACC]" />
-              <span>mayankjangra2015@gmail.com</span>
-            </a>
+              {/* Social & Contact details */}
+              <div className="flex flex-col gap-4 font-mono text-xs sm:text-sm">
+                {/* Email Pill & Circular Copy Button Row */}
+                <div className="flex items-center gap-3 w-full max-w-full">
+                  <a
+                    id="cta-email-mailto"
+                    href="mailto:mayankjangra2015@gmail.com"
+                    className="group relative inline-flex items-center gap-3 bg-surface border border-stroke text-text-primary text-xs sm:text-sm font-semibold rounded-full px-5 sm:px-6 py-3.5 hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-xl overflow-hidden truncate flex-1"
+                  >
+                    <span className="absolute -inset-[1.5px] bg-transparent rounded-full group-hover:accent-gradient -z-10 transition-all duration-300" />
+                    <Mail className="w-4 h-4 text-[#89AACC] shrink-0" />
+                    <span className="truncate">mayankjangra2015@gmail.com</span>
+                  </a>
 
-            {/* Quick copy convenience button */}
-            <button
-              id="cta-email-copy"
-              onClick={handleCopy}
-              className="group flex p-4 rounded-full border border-stroke bg-surface/50 hover:bg-surface text-muted hover:text-text-primary transition-all duration-300 scale-90 hover:scale-100 cursor-pointer shadow-lg"
-              title="Copy email to clipboard"
-            >
-              {copied ? (
-                <Check className="w-4 h-4 text-green-400 animate-pulse" />
-              ) : (
-                <Copy className="w-4 h-4" />
-              )}
-            </button>
+                  <button
+                    id="cta-email-copy"
+                    onClick={handleCopy}
+                    className="group flex p-3.5 rounded-full border border-stroke bg-surface/50 hover:bg-surface text-muted hover:text-text-primary transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer shadow-lg shrink-0"
+                    title="Copy email to clipboard"
+                  >
+                    {copied ? (
+                      <Check className="w-4 h-4 text-emerald-400 animate-pulse" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Circular Social Profiles Row (matching footer bottom-right icons) */}
+                <div className="pt-2 pb-1 flex flex-col gap-3">
+                  <span className="text-[10px] text-muted uppercase tracking-[0.2em] font-mono">
+                    CONNECT ON SOCIALS
+                  </span>
+                  <div className="flex items-center gap-3.5" id="contact-social-icons">
+                    {socials.map((soc) => (
+                      <a
+                        key={`contact-soc-${soc.label}`}
+                        href={soc.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group w-13 h-13 sm:w-14 sm:h-14 rounded-full border border-stroke/70 bg-surface/30 flex items-center justify-center text-muted hover:text-text-primary hover:border-[#89AACC]/60 hover:bg-surface hover:scale-110 active:scale-95 transition-all duration-300 shadow-lg [&_svg]:w-5 [&_svg]:h-5 sm:[&_svg]:w-6 sm:[&_svg]:h-6"
+                        title={soc.label}
+                      >
+                        {soc.icon}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Embedded Google Map Location Card (compact size) */}
+                <div className="flex flex-col gap-2 my-1">
+                  <div className="flex items-center justify-between font-mono text-xs">
+                    <span className="text-[10px] text-muted uppercase tracking-[0.2em]">
+                      LOCATION
+                    </span>
+                    <span className="text-text-primary flex items-center gap-1.5 font-light">
+                      <span></span> Sonipat, Haryana, India
+                    </span>
+                  </div>
+
+                  <div className="relative w-full h-32 sm:h-36 rounded-2xl border border-stroke/70 overflow-hidden group shadow-xl bg-surface/40">
+                    {/* Top-Left Floating 'Open in Maps' Badge */}
+                    <a
+                      href="https://www.google.com/maps?ll=28.969646,77.056485&z=11&t=m&hl=en-US&gl=US&mapclient=embed&q=Sonipat+Haryana"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute top-2.5 left-2.5 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg/90 backdrop-blur-md border border-stroke text-[10px] sm:text-[11px] font-mono font-semibold text-[#89AACC] hover:text-text-primary hover:bg-surface hover:scale-105 active:scale-95 transition-all shadow-lg"
+                      title="Open Sonipat, India in Google Maps"
+                    >
+                      <span>Open in Maps</span>
+                      <ExternalLink className="w-3 h-3 text-[#89AACC]" />
+                    </a>
+
+                    {/* Interactive Embedded Google Map iframe */}
+                    <iframe
+                      title="Sonipat Google Map Location"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0, filter: "grayscale(0.4) contrast(1.1) opacity(0.9)" }}
+                      loading="lazy"
+                      allowFullScreen
+                      referrerPolicy="no-referrer-when-downgrade"
+                      src="https://maps.google.com/maps?q=Sonipat,+Haryana,+India&t=&z=12&ie=UTF8&iwloc=&output=embed"
+                      className="w-full h-full group-hover:filter-none transition-all duration-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Contact Form */}
+            <div className="lg:col-span-7">
+              <div className="bg-surface/50 border border-stroke rounded-3xl p-6 sm:p-8 md:p-10 backdrop-blur-md shadow-2xl relative overflow-hidden">
+                {/* Gradient Top Line */}
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#89AACC]/50 to-transparent" />
+
+                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                  {/* Full Name */}
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="fullName" className="text-xs font-mono uppercase tracking-wider text-muted">
+                      Full Name <span className="text-rose-400">*</span>
+                    </label>
+                    <input
+                      id="fullName"
+                      type="text"
+                      required
+                      placeholder="Your Full Name"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      className="w-full bg-bg/80 border border-stroke rounded-xl px-4 py-3.5 text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all shadow-inner"
+                    />
+                  </div>
+
+                  {/* Email & Phone Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Email Address */}
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="email" className="text-xs font-mono uppercase tracking-wider text-muted">
+                        Email Address <span className="text-rose-400">*</span>
+                      </label>
+                      <input
+                        id="email"
+                        type="email"
+                        required
+                        placeholder="you@example.com"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="w-full bg-bg/80 border border-stroke rounded-xl px-4 py-3.5 text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all shadow-inner"
+                      />
+                    </div>
+
+                    {/* Phone Number (Optional) */}
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="phone" className="text-xs font-mono uppercase tracking-wider text-muted flex items-center justify-between">
+                        <span>Phone Number</span>
+                        <span className="text-[10px] text-muted/60 lowercase font-normal">(optional)</span>
+                      </label>
+                      <input
+                        id="phone"
+                        type="tel"
+                        placeholder="+91 98765 43210"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        className="w-full bg-bg/80 border border-stroke rounded-xl px-4 py-3.5 text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all shadow-inner"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Subject */}
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="subject" className="text-xs font-mono uppercase tracking-wider text-muted">
+                      Subject
+                    </label>
+                    <input
+                      id="subject"
+                      type="text"
+                      placeholder="Project Opportunity / Hello"
+                      value={formData.subject}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                      className="w-full bg-bg/80 border border-stroke rounded-xl px-4 py-3.5 text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all shadow-inner"
+                    />
+                  </div>
+
+                  {/* Message */}
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="message" className="text-xs font-mono uppercase tracking-wider text-muted">
+                      Message <span className="text-rose-400">*</span>
+                    </label>
+                    <textarea
+                      id="message"
+                      required
+                      rows={4}
+                      placeholder="Tell me about your project or inquiry..."
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className="w-full bg-bg/80 border border-stroke rounded-xl px-4 py-3.5 text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all resize-none shadow-inner"
+                    />
+                  </div>
+
+                  {/* Status Banner */}
+                  {status && (
+                    <div
+                      className={`p-4 rounded-xl flex items-start gap-3 text-xs sm:text-sm font-sans ${
+                        status.type === "success"
+                          ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+                          : "bg-rose-500/10 border border-rose-500/30 text-rose-400"
+                      }`}
+                    >
+                      {status.type === "success" ? (
+                        <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
+                      ) : (
+                        <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+                      )}
+                      <span>{status.message}</span>
+                    </div>
+                  )}
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="group relative w-full inline-flex items-center justify-center gap-3 bg-surface border border-stroke text-text-primary text-sm font-semibold rounded-xl px-8 py-4 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+                  >
+                    {/* Outer gradient hover border ring */}
+                    <span className="absolute -inset-[1.5px] bg-transparent rounded-xl group-hover:accent-gradient -z-10 transition-all duration-300" />
+                    
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin text-[#89AACC]" />
+                        <span>Sending Message...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Send Message</span>
+                        <ArrowRight className="w-4 h-4 text-[#89AACC] group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
+            </div>
+
           </div>
-
-          {copied && (
-            <span className="text-[10px] text-green-400 font-mono mt-3 animate-fade-in">
-              Email copied to clipboard successfully!
-            </span>
-          )}
         </div>
 
         {/* Footer Bar */}
-        <div className="w-full max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16 pt-8 border-t border-stroke/50 flex flex-col sm:flex-row justify-between items-center gap-6">
+        <div className="w-full max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16 pt-8 border-t border-stroke/50 flex flex-col sm:flex-row justify-between items-center gap-4">
           {/* Leftside: Pulser availability */}
           <div className="flex items-center gap-2.5" id="footer-availability">
             <span className="relative flex h-2.5 w-2.5">
@@ -199,29 +515,13 @@ href="mailto:mayankjangra2015@gmail.com"
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
             </span>
             <span className="text-xs font-mono text-muted tracking-tight">
-              Available for AI/ML & Development projects
+              Available and Open to work
             </span>
           </div>
 
-          {/* Centered copyright/details */}
-          <div className="text-muted/40 font-mono text-[9px] text-center sm:text-left">
+          {/* Rightside: Copyright details */}
+          <div className="text-muted/100 font-mono text-[11px] text-center sm:text-right">
             © mkjangra22. ALL RIGHTS RESERVED.
-          </div>
-
-          {/* Rightside: Socials */}
-          <div className="flex items-center gap-3" id="footer-social-links">
-            {socials.map((soc) => (
-              <a
-                key={soc.label}
-                href={soc.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group w-8 h-8 rounded-full border border-stroke/70 bg-surface/25 flex items-center justify-center text-muted hover:text-text-primary hover:border-stroke hover:bg-surface transition-all duration-300"
-                title={soc.label}
-              >
-                {soc.icon}
-              </a>
-            ))}
           </div>
         </div>
 
@@ -229,3 +529,4 @@ href="mailto:mayankjangra2015@gmail.com"
     </footer>
   );
 }
+
