@@ -134,12 +134,40 @@ export default function Footer() {
         },
       ]);
 
-      if (error) {
-        throw error;
-      }
+     if (error) {
+      throw error;
+}
 
-      setStatus({ type: "success", message: "Your message has been sent successfully! I'll get back to you soon." });
-      setFormData({ fullName: "", email: "", phone: "", subject: "", message: "" });
+// Call the Edge Function to send email
+const { error: emailError } = await supabase.functions.invoke(
+  "send-contact-email",
+  {
+    body: {
+      full_name: formData.fullName.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim() || "",
+      subject: formData.subject.trim() || "No Subject",
+      message: formData.message.trim(),
+    },
+  }
+);
+
+if (emailError) {
+  console.error("Email Error:", emailError);
+}
+
+setStatus({
+  type: "success",
+  message: "Your message has been sent successfully! I'll get back to you soon.",
+});
+
+setFormData({
+  fullName: "",
+  email: "",
+  phone: "",
+  subject: "",
+  message: "",
+});
     } catch (err: any) {
       console.error("Contact Form Error:", err);
       setStatus({
