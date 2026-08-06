@@ -112,7 +112,7 @@ export default function Footer() {
     }
   };
 
-  // Form submission logic targeting Supabase
+  // Form submission logic targeting Supabase 'contacts' table
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!formData.fullName.trim() || !formData.email.trim() || !formData.message.trim()) {
@@ -124,77 +124,18 @@ export default function Footer() {
     setStatus(null);
 
     try {
-      // 1. Array of candidate table names to try, prioritizing 'contacts' and custom env table
-      const customTable = (import.meta as any).env?.VITE_SUPABASE_CONTACT_TABLE;
-      const candidateTables = Array.from(
-        new Set([
-          customTable,
-          "contacts",
-          "contact_messages",
-          "contact_me",
-          "messages",
-          "contact",
-        ].filter(Boolean) as string[])
-      );
+      const { error } = await supabase.from("contacts").insert([
+        {
+          full_name: formData.fullName.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim() || null,
+          subject: formData.subject.trim() || null,
+          message: formData.message.trim(),
+        },
+      ]);
 
-      let lastError: any = null;
-      let success = false;
-
-      for (const tableName of candidateTables) {
-        // Attempt A: with full_name & phone column
-        let res = await supabase.from(tableName).insert([
-          {
-            full_name: formData.fullName.trim(),
-            email: formData.email.trim(),
-            phone: formData.phone.trim() || null,
-            subject: formData.subject.trim() || "Portfolio Contact Form",
-            message: formData.message.trim(),
-          },
-        ]);
-
-        // Attempt B: if full_name / phone column is missing, insert with formatted message
-        if (
-          res.error &&
-          (res.error.message?.includes("full_name") || res.error.message?.includes("phone") || res.error.code === "PGRST204")
-        ) {
-          const phoneDetails = formData.phone.trim() ? `\nPhone: ${formData.phone.trim()}` : "";
-          res = await supabase.from(tableName).insert([
-            {
-              email: formData.email.trim(),
-              subject: `[${formData.fullName.trim()}] ${formData.subject.trim() || "Portfolio Contact"}`,
-              message: `Sender Name: ${formData.fullName.trim()}${phoneDetails}\n\nMessage:\n${formData.message.trim()}`,
-            },
-          ]);
-        }
-
-        if (!res.error) {
-          success = true;
-          break;
-        }
-
-        lastError = res.error;
-
-        // If error is NOT "table not found", stop iterating table names
-        const isTableNotFound =
-          res.error.code === "42P01" ||
-          res.error.code === "PGRST204" ||
-          res.error.code === "PGRST205" ||
-          res.error.message?.includes("schema cache") ||
-          res.error.message?.includes("relation");
-
-        if (!isTableNotFound) {
-          break;
-        }
-      }
-
-      if (!success) {
-        console.error("Supabase Submission Error:", lastError);
-        const errorMsg = lastError?.message || "Failed to submit message to Supabase.";
-        
-        if (errorMsg.includes("schema cache") || errorMsg.includes("relation")) {
-          throw new Error("Table not found in Supabase. Please ensure your Supabase table (e.g. 'contacts' or 'contact_messages') is created.");
-        }
-        throw new Error(errorMsg);
+      if (error) {
+        throw error;
       }
 
       setStatus({ type: "success", message: "Your message has been sent successfully! I'll get back to you soon." });
@@ -238,9 +179,9 @@ export default function Footer() {
       </div>
 
       <div className="relative z-10 w-full flex flex-col items-center">
-        
+
         {/* GSAP Infinite Marquee Ribbon */}
-        <div className="w-full overflow-hidden border-t border-b border-stroke/40 py-5 bg-surface/5 backdrop-blur-sm mb-16 sm:mb-20">
+        <div className="w-full overflow-hidden border-t border-b border-stroke/40 py-5 bg-surface/5 backdrop-blur-sm mb-16 sm:mb-20 lg:mb-24">
           <div className="flex whitespace-nowrap w-[200%] md:w-[200%]" ref={marqueeRef}>
             {/* Set 1 */}
             <div className="flex justify-around min-w-full font-display italic text-2xl sm:text-4xl md:text-5xl uppercase tracking-wider text-text-primary/70">
@@ -264,21 +205,21 @@ export default function Footer() {
         </div>
 
         {/* 2-Column Contact Section */}
-        <div className="w-full max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16 mb-16 sm:mb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-            
+        <div className="w-full max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16 mb-16 sm:mb-20 lg:mb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-stretch">
+
             {/* Left Column: Contact Me Info */}
-            <div className="lg:col-span-5 flex flex-col justify-between h-full">
+            <div className="lg:col-span-1 flex flex-col justify-between h-full">
               <div>
                 <span className="text-[10px] sm:text-xs text-muted uppercase tracking-[0.3em] font-mono mb-4 block">
                   CONTACT ME
                 </span>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight text-text-primary mb-6 font-sans leading-tight">
-                  {/* Have a project or opportunity? */<span className="font-display italic block sm:inline">Let's connect!</span> }
+                  {/* Have a project or opportunity?*/ <span className="font-display italic block sm:inline">Let's connect!</span>}
                 </h2>
-                <p className="text-xs sm:text-sm text-muted font-light leading-relaxed mb-8 max-w-md">
+                {/* <p className="text-xs sm:text-sm text-muted font-light leading-relaxed mb-8 max-w-md">
                   Feel free to reach out for projects, internship, freelance opportunity, or collaboration in mind?
-                </p>
+                </p> */}
               </div>
 
               {/* Social & Contact details */}
@@ -311,9 +252,9 @@ export default function Footer() {
 
                 {/* Circular Social Profiles Row (matching footer bottom-right icons) */}
                 <div className="pt-2 pb-1 flex flex-col gap-3">
-                  <span className="text-[10px] text-muted uppercase tracking-[0.2em] font-mono">
-                    CONNECT ON SOCIALS
-                  </span>
+                  {/* <span className="text-[10px] text-muted uppercase tracking-[0.2em] font-mono">
+                    {CONNECT ON SOCIALS }
+                  </span> */}
                   <div className="flex items-center gap-3.5" id="contact-social-icons">
                     {socials.map((soc) => (
                       <a
@@ -371,15 +312,15 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Right Column: Contact Form */}
-            <div className="lg:col-span-7">
-              <div className="bg-surface/50 border border-stroke rounded-3xl p-6 sm:p-8 md:p-10 backdrop-blur-md shadow-2xl relative overflow-hidden">
+            {/* Right Column: Contact Form (compact box) */}
+            <div className="lg:col-span-1 h-full flex flex-col">
+              <div className="bg-surface/50 border border-stroke rounded-3xl p-5 sm:p-6 md:p-7 backdrop-blur-md shadow-2xl relative overflow-hidden h-full flex flex-col justify-between">
                 {/* Gradient Top Line */}
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#89AACC]/50 to-transparent" />
 
-                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
                   {/* Full Name */}
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-1.5">
                     <label htmlFor="fullName" className="text-xs font-mono uppercase tracking-wider text-muted">
                       Full Name <span className="text-rose-400">*</span>
                     </label>
@@ -390,14 +331,14 @@ export default function Footer() {
                       placeholder="Your Full Name"
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      className="w-full bg-bg/80 border border-stroke rounded-xl px-4 py-3.5 text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all shadow-inner"
+                      className="w-full bg-bg/80 border border-stroke rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all shadow-inner"
                     />
                   </div>
 
                   {/* Email & Phone Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     {/* Email Address */}
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1.5">
                       <label htmlFor="email" className="text-xs font-mono uppercase tracking-wider text-muted">
                         Email Address <span className="text-rose-400">*</span>
                       </label>
@@ -408,12 +349,12 @@ export default function Footer() {
                         placeholder="you@example.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full bg-bg/80 border border-stroke rounded-xl px-4 py-3.5 text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all shadow-inner"
+                        className="w-full bg-bg/80 border border-stroke rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all shadow-inner"
                       />
                     </div>
 
                     {/* Phone Number (Optional) */}
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1.5">
                       <label htmlFor="phone" className="text-xs font-mono uppercase tracking-wider text-muted flex items-center justify-between">
                         <span>Phone Number</span>
                         <span className="text-[10px] text-muted/60 lowercase font-normal">(optional)</span>
@@ -424,13 +365,13 @@ export default function Footer() {
                         placeholder="+91 98765 43210"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full bg-bg/80 border border-stroke rounded-xl px-4 py-3.5 text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all shadow-inner"
+                        className="w-full bg-bg/80 border border-stroke rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all shadow-inner"
                       />
                     </div>
                   </div>
 
                   {/* Subject */}
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-1.5">
                     <label htmlFor="subject" className="text-xs font-mono uppercase tracking-wider text-muted">
                       Subject
                     </label>
@@ -440,39 +381,38 @@ export default function Footer() {
                       placeholder="Project Opportunity / Hello"
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full bg-bg/80 border border-stroke rounded-xl px-4 py-3.5 text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all shadow-inner"
+                      className="w-full bg-bg/80 border border-stroke rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all shadow-inner"
                     />
                   </div>
 
                   {/* Message */}
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-1.5">
                     <label htmlFor="message" className="text-xs font-mono uppercase tracking-wider text-muted">
                       Message <span className="text-rose-400">*</span>
                     </label>
                     <textarea
                       id="message"
                       required
-                      rows={4}
+                      rows={2}
                       placeholder="Tell me about your project or inquiry..."
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full bg-bg/80 border border-stroke rounded-xl px-4 py-3.5 text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all resize-none shadow-inner"
+                      className="w-full bg-bg/80 border border-stroke rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-text-primary placeholder:text-muted/40 focus:outline-none focus:border-[#89AACC] transition-all resize-none shadow-inner"
                     />
                   </div>
 
                   {/* Status Banner */}
                   {status && (
                     <div
-                      className={`p-4 rounded-xl flex items-start gap-3 text-xs sm:text-sm font-sans ${
-                        status.type === "success"
+                      className={`p-3 rounded-xl flex items-start gap-2.5 text-xs font-sans ${status.type === "success"
                           ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
                           : "bg-rose-500/10 border border-rose-500/30 text-rose-400"
-                      }`}
+                        }`}
                     >
                       {status.type === "success" ? (
-                        <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
                       ) : (
-                        <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+                        <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                       )}
                       <span>{status.message}</span>
                     </div>
@@ -482,11 +422,11 @@ export default function Footer() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="group relative w-full inline-flex items-center justify-center gap-3 bg-surface border border-stroke text-text-primary text-sm font-semibold rounded-xl px-8 py-4 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+                    className="group relative w-full inline-flex items-center justify-center gap-2.5 bg-surface border border-stroke text-text-primary text-xs sm:text-sm font-semibold rounded-xl px-6 py-3 hover:scale-[1.01] active:scale-[0.98] transition-all duration-300 shadow-xl cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed mt-1"
                   >
                     {/* Outer gradient hover border ring */}
                     <span className="absolute -inset-[1.5px] bg-transparent rounded-xl group-hover:accent-gradient -z-10 transition-all duration-300" />
-                    
+
                     {loading ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin text-[#89AACC]" />

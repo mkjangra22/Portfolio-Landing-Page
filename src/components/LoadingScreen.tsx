@@ -64,7 +64,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           Portfolio 
         </motion.div>
         <div className="text-xs text-muted/30 font-mono">
-          SYSTEM_ONLINE_STABLE
+          {/* SYSTEM_ONLINE_STABLE */}
         </div>
       </div>
 
@@ -90,7 +90,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       {/* Bottom Content Row */}
       <div className="flex flex-col sm:flex-row justify-between items-end gap-6 w-full">
         {/* Left Side: Detail list */}
-        <div className="flex flex-col gap-1 items-start font-mono text-[10px] text-muted">
+        <div className="flex flex-col gap-1 items-start font-mono text-[15px] text-muted">
           <div>NAME: MAYANK KUMAR</div>
           <div>LOCATION: HARYANA, INDIA</div>
           <div>COMPUTER SCIENCE ENGINEER</div>
