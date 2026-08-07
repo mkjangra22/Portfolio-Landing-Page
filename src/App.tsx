@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Award, Briefcase, GraduationCap, Download, CheckCircle, Mail, MapPin } from "lucide-react";
+import { X, Award, Briefcase, GraduationCap, Download, Eye, CheckCircle, Mail, MapPin } from "lucide-react";
 
 // Import modules
 import LoadingScreen from "./components/LoadingScreen";
@@ -139,21 +139,22 @@ function MainPortfolioContent() {
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="text-[10px] sm:text-xs text-muted font-mono uppercase tracking-[0.2em]">
-                    Interactive Resume
+                    Curriculum Vitae
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  {/* Download Mock CTA */}
+                  {/* Download & View Resume CTA */}
                   <a
-  href="/Mayank_s_Resume (1).pdf"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-semibold uppercase tracking-wider text-[#89AACC] hover:text-text-primary hover:underline transition-all"
->
-  <Download className="w-3.5 h-3.5" />
-  <span className="hidden sm:inline">Resume</span>
-</a>
+                    href="/Mayank_s_Resume (1).pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-[10px] sm:text-[15px] font-mono font-semibold uppercase tracking-wider text-[#89AACC] hover:text-text-primary hover:underline transition-all"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    <Download className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Resume</span>
+                  </a>
 
                   {/* Close button */}
                   <button
@@ -179,7 +180,7 @@ function MainPortfolioContent() {
                     </p>
                   </div>
 
-                  <div className="flex flex-col gap-1.5 text-xs text-muted font-mono">
+                  <div className="flex flex-col gap-1.5 text-[12px] text-muted font-mono">
                     <div className="flex items-center gap-2">
                       <Mail className="w-3.5 h-3.5 text-[#4E85BF]" />
                       <span>mayankjangra2015@gmail.com</span>
@@ -203,12 +204,12 @@ function MainPortfolioContent() {
                       <div className="flex flex-wrap gap-1.5">
                         {[
                           "Languages: Python, C++, SQL, HTML, CSS",
-                          "Libraries/Frameworks: NumPy, Pandas, Scikit-learn, Matplotlib, Seaborn",
+                          "Libraries/Frameworks: NumPy, Pandas, Scikit-learn, Matplotlib, Seaborn, React.js",
                           "Data Science & ML: Data Preprocessing, Exploratory Data Analysis (EDA), Model Building, Model Evaluation",
-                          "Prompt Engineering, Agentic AI & n8n",
+                          "AI: Prompt Engineering, Generative AI, LLMs, Agentic AI & n8n",
                           "Tools/Platforms: Git, GitHub, Jupyter Notebook, VS Code, Google Colab, Docker",
-                          "Core CS: DSA, OOPs, OS, DBMS, Networks",
-                          "Soft Skills: Problem Solving, Leadership, Team Collaboration, Quick Learner, Consistency & Discipline",
+                          // "Core CS: DSA, OOPs, OS, DBMS, Networks",
+                          // "Soft Skills: Problem Solving, Leadership, Team Collaboration, Quick Learner, Consistency & Discipline",
                           "Graphic Designing, Video Editing",
                         ].map((skill) => (
                           <span
@@ -234,13 +235,13 @@ function MainPortfolioContent() {
                           </h4>
                           <p className="text-xs text-muted font-light">Kurukshetra University, Kurukshetra</p>
                         </div>
-                        <div>
+                        {/* <div>
                           <div className="text-[10px] text-muted font-mono">2023</div>
                           <h4 className="text-sm font-semibold text-text-primary mt-0.5">
                             High School
                           </h4>
                           <p className="text-xs text-muted font-light">CBSE</p>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
@@ -256,18 +257,18 @@ function MainPortfolioContent() {
                       <div>
                         <div className="flex justify-between items-baseline gap-2">
                           <h4 className="text-base font-semibold text-text-primary">
-                            Python Developer
+                            AI Engineer Intern ( Remote )
                           </h4>
                           <span className="text-[10px] text-[#4E85BF] font-mono shrink-0">
-                            June 2026 – Present
+                            June – July 2026
                           </span>
                         </div>
                         <div className="text-xs text-muted font-mono uppercase tracking-wide mt-0.5">
-                          Learnify Loop
+                          TechZolo 
                         </div>
                         <p className="text-xs text-muted mt-2 font-light leading-relaxed">
-                          Work with the development team on technical tasks related to backend
-systems, APIs, automation tools, and platform development.
+                          Work with the development team on technical tasks related to AI
+systems, automation tools, and platform development.
                         </p>
                       </div>
 
