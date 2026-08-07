@@ -14,6 +14,7 @@ import {
   ArrowRight,
   ExternalLink,
 } from "lucide-react";
+import emailjs from "@emailjs/browser";
 import { supabase } from "../lib/supabase";
 
 export default function Footer() {
@@ -114,17 +115,32 @@ export default function Footer() {
 
   // Form submission logic targeting Supabase 'contacts' table
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!formData.fullName.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setStatus({ type: "error", message: "Please fill in all required fields (Full Name, Email & Message)." });
-      return;
-    }
+  e.preventDefault();
 
-    setLoading(true);
-    setStatus(null);
+  // Basic validation
+  if (
+    !formData.fullName.trim() ||
+    !formData.email.trim() ||
+    !formData.message.trim()
+  ) {
+    setStatus({
+      type: "error",
+      message:
+        "Please fill in all required fields (Full Name, Email & Message).",
+    });
+    return;
+  }
 
-    try {
-      const { error } = await supabase.from("contacts").insert([
+  setLoading(true);
+  setStatus(null);
+
+  try {
+    // ==========================================
+    // 1. SAVE CONTACT MESSAGE TO SUPABASE
+    // ==========================================
+    const { error: dbError } = await supabase
+      .from("contacts")
+      .insert([
         {
           full_name: formData.fullName.trim(),
           email: formData.email.trim(),
@@ -134,51 +150,72 @@ export default function Footer() {
         },
       ]);
 
-     if (error) {
-      throw error;
-}
-
-// Call the Edge Function to send email
-const { error: emailError } = await supabase.functions.invoke(
-  "send-contact-email",
-  {
-    body: {
-      full_name: formData.fullName.trim(),
-      email: formData.email.trim(),
-      phone: formData.phone.trim() || "",
-      subject: formData.subject.trim() || "No Subject",
-      message: formData.message.trim(),
-    },
-  }
-);
-
-if (emailError) {
-  console.error("Email Error:", emailError);
-}
-
-setStatus({
-  type: "success",
-  message: "Your message has been sent successfully! I'll get back to you soon.",
-});
-
-setFormData({
-  fullName: "",
-  email: "",
-  phone: "",
-  subject: "",
-  message: "",
-});
-    } catch (err: any) {
-      console.error("Contact Form Error:", err);
-      setStatus({
-        type: "error",
-        message: err?.message || "Something went wrong while sending your message. Please try again.",
-      });
-    } finally {
-      setLoading(false);
+    if (dbError) {
+      throw dbError;
     }
-  };
 
+    // ==========================================
+    // 2. SEND NOTIFICATION EMAIL TO YOU
+    // ==========================================
+    await emailjs.send(
+      "service_7s5lgvk",
+      "template_efjd4ti",
+      {
+        full_name: formData.fullName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim() || "Not provided",
+        subject: formData.subject.trim() || "No subject",
+        message: formData.message.trim(),
+      },
+      "B1QpdRSe0T8ChyKO-"
+    );
+
+    // ==========================================
+    // 3. SEND AUTO-REPLY TO VISITOR
+    // ==========================================
+    await emailjs.send(
+      "service_7s5lgvk",
+      "template_1ineyol",
+      {
+        full_name: formData.fullName.trim(),
+        email: formData.email.trim(),
+        subject: formData.subject.trim() || "No subject",
+        message: formData.message.trim(),
+      },
+      "B1QpdRSe0T8ChyKO-"
+    );
+
+    // ==========================================
+    // 4. SUCCESS
+    // ==========================================
+    setStatus({
+      type: "success",
+      message:
+        "Your message has been sent successfully! I'll get back to you soon.",
+    });
+
+    // Clear form
+    setFormData({
+      fullName: "",
+      email: "",
+      phone: "",
+      subject: "",
+      message: "",
+    });
+  } catch (err: any) {
+    console.error("Contact Form Error:", err);
+
+    setStatus({
+      type: "error",
+      message:
+        err?.text ||
+        err?.message ||
+        "Something went wrong while sending your message. Please try again.",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
   const socials = [
     { label: "Instagram", url: "https://www.instagram.com/mkjangra22/", icon: <Instagram className="w-4 h-4" /> },
     { label: "LinkedIn", url: "https://www.linkedin.com/in/mkjangra22/", icon: <Linkedin className="w-4 h-4" /> },
