@@ -148,7 +148,7 @@ export default function Explorations() {
             Unregulated aesthetic experiments, material renderings, and brutalist geometric layout drafts from daily practice.
           </p>
 
-          {/* Dribbble CTA Button */}
+          {/* Dribbble CTA Button
           <a
             href="https://dribbble.com"
             target="_blank"
@@ -158,7 +158,7 @@ export default function Explorations() {
             <span className="absolute -inset-[1px] bg-transparent rounded-full group-hover:accent-gradient -z-10 transition-all duration-300 pointer-events-none" />
             <Dribbble className="w-3.5 h-3.5 text-[#89AACC] group-hover:text-text-primary transition-colors" />
             <span>Follow on Dribbble</span>
-          </a>
+          </a> */}
         </div>
       </div>
 

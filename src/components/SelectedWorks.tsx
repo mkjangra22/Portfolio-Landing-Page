@@ -6,35 +6,35 @@ import { X, ArrowRight, Layers, Layout, Compass, Shield } from "lucide-react";
 const PROJECTS: Project[] = [
   {
     id: "proj-1",
-    title: "UniHub",
-    category: "AI-Powered Campus Assistant",
-    image: "unihub.jpeg",
-    aspectRatio: "md:aspect-[7/4]",
-    colSpan: "md:col-span-7",
-    description: "All-in-one campus platform for students to manage attendance, lecture schedules, assignments, results, eventts, marketplace, and student community interactions with smart assistant support and real-time updates.",
-    role: "AI and Developer",
-    tech: "Python, LLM APIs, HTML & CSS, Firebase",
-    client: "University Campus Management (Prototype)",
-  },
-  {
-    id: "proj-2",
     title: "AutoMark",
     category: "Face Recognition Attendance System",
-    image: "automark.png",
-    aspectRatio: "md:aspect-[5/4]",
-    colSpan: "md:col-span-5",
+    image: "Automark_project.png",
+    aspectRatio: "aspect-[16/10]",
+    colSpan: "md:col-span-6",
     description: "Attendance management system that uses face recognition to automatically detect and mark student attendance with real-time monitoring, secure data handling, and reduced manual effort.",
     role: "ML Engineer and Developer",
     tech: "Python, Face Recognition, Firebase, HTML & CSS",
     client: "Attendance Automation Prototype (Internal)",
   },
   {
+    id: "proj-2",
+    title: "UniHub",
+    category: "AI-Powered Campus Assistant",
+    image: "UniHub_project.png",
+    aspectRatio: "md:aspect-[16/10]",
+    colSpan: "md:col-span-6",
+    description: "All-in-one campus platform for students to manage attendance, lecture schedules, assignments, results, eventts, marketplace, and student community interactions with smart assistant support and real-time updates.",
+    role: "AI and Developer",
+    tech: "Python, LLM APIs, HTML & CSS, Firebase",
+    client: "University Campus Management (Prototype)",
+  },
+  {
     id: "proj-3",
     title: "Cricket Analyzer",
     category: "Dashboard & Analytics",
     image: "cricketanalyzer.png",
-    aspectRatio: "md:aspect-[5/4]",
-    colSpan: "md:col-span-5",
+    aspectRatio: "aspect-[16/10]",
+    colSpan: "md:col-span-6",
     description: "A cricket data analysis and visualization system to analyze player and match statistics.",
     role: "Data Analyst / Visualization Developer",
     tech: "Python, Pandas, Matplotlib",
@@ -45,8 +45,8 @@ const PROJECTS: Project[] = [
     title: "Web Development Projects",
     category: "Abstract Packaging",
     image: "webpage.png",
-    aspectRatio: "md:aspect-[7/4]",
-    colSpan: "md:col-span-7",
+    aspectRatio: "md:aspect-[16/10]",
+    colSpan: "md:col-span-6",
     description: "Created responsive portfolio and e-commerce webpages with auth system, payment gateway, API key integration.",
     role: "Frontend Developer",
     tech: "HTML • CSS • JavaScript • Auth • Payments • API Integration",
@@ -86,7 +86,7 @@ export default function SelectedWorks() {
             </h2>
             
             {/* Subtext */}
-            <p className="text-muted mt-3 text-sm max-w-sm">
+            <p className="text-muted mt-3 text-sm">
               A selection of projects I've worked on, from concept to launch.
             </p>
           </div>
@@ -104,7 +104,7 @@ export default function SelectedWorks() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: idx * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
               viewport={{ once: true, margin: "-50px" }}
-              className={`group flex flex-col justify-between overflow-hidden bg-surface border border-stroke rounded-3xl cursor-pointer relative ${project.colSpan} ${project.aspectRatio} aspect-video`}
+              className={`group flex flex-col justify-between overflow-hidden bg-surface border border-stroke rounded-3xl cursor-pointer relative ${project.colSpan} ${project.aspectRatio}`}
               onClick={() => setSelectedProject(project)}
             >
               {/* Background Image */}

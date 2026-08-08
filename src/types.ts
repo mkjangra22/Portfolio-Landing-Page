@@ -18,7 +18,7 @@ export interface JournalEntry {
   title: string;
   category: string;
   image: string;
-  readTime: string;
+  readTime?: string;
   date: string;
 }
 
