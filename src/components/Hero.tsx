@@ -156,7 +156,7 @@ export default function Hero({ startAnimation, onNavigate }: HeroProps) {
           id="hero-description"
           className="blur-in text-xs sm:text-sm md:text-base text-muted max-w-md mb-10 leading-relaxed"
         >
-          Eager to learn, build practical solutions, and gain real-world industry experience.
+          Learning. Building. Engineering.<br/>Turning ideas into real-world solutions.
         </p>
 
         {/* CTA Buttons */}

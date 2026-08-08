@@ -90,7 +90,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       {/* Bottom Content Row */}
       <div className="flex flex-col sm:flex-row justify-between items-end gap-6 w-full">
         {/* Left Side: Detail list */}
-        <div className="flex flex-col gap-1 items-start font-mono text-[15px] text-muted">
+        <div className="flex flex-col gap-1 items-start font-mono text-[12px] text-muted">
           <div>NAME: MAYANK KUMAR</div>
           <div>LOCATION: HARYANA, INDIA</div>
           <div>COMPUTER SCIENCE ENGINEER</div>
@@ -101,7 +101,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           <span className="text-6xl md:text-8xl lg:text-9xl font-display text-text-primary tabular-nums tracking-tight">
             {String(count).padStart(3, "0")}
           </span>
-          <span className="text-xs text-muted font-mono ml-2">%</span>
+          <span className="text-[30px] text-muted font-mono ml-2">%</span>
         </div>
       </div>
 
