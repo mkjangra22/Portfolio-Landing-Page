@@ -10,6 +10,7 @@ import Hero from "./components/Hero";
 import SelectedWorks from "./components/SelectedWorks";
 import Explorations from "./components/Explorations";
 import Journal from "./components/Journal";
+import Stats from "./components/Stats";
 import Footer from "./components/Footer";
 
 function MainPortfolioContent() {
@@ -100,6 +101,10 @@ function MainPortfolioContent() {
             onNavigate={handleNavigate}
           />
 
+          {/* Stats section
+          <Stats />
+          */}
+
           {/* Section 3: Selected Works */}
           <SelectedWorks />
 
@@ -118,12 +123,12 @@ function MainPortfolioContent() {
         </motion.div>
       )}
 
-      {/* DETAILED INTERACTIVE RESUME MODAL */}
+      {/* RESUME PDF VIEW & DOWNLOAD MODAL */}
       <AnimatePresence>
         {showResume && (
           <div
             id="resume-modal-overlay"
-            className="fixed inset-0 z-50 bg-[#000000]/90 backdrop-blur-2xl flex items-center justify-center p-4 overload-y-auto"
+            className="fixed inset-0 z-50 bg-[#000000]/90 backdrop-blur-2xl flex items-center justify-center p-4 md:p-6 overflow-hidden"
           >
             {/* Click backdrop to exit */}
             <div
@@ -131,35 +136,33 @@ function MainPortfolioContent() {
               onClick={() => setShowResume(false)}
             />
 
-            {/* Resume Card with framer-motion slide up */}
+            {/* Resume Card with iframe PDF viewer */}
             <motion.div
               id="resume-modal-card"
               initial={{ opacity: 0, y: 50, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 50, scale: 0.95 }}
               transition={{ type: "spring", damping: 25, stiffness: 220 }}
-              className="relative w-full max-w-[800px] h-[85vh] bg-surface/95 border border-stroke rounded-3xl shadow-2xl flex flex-col overflow-hidden z-10 p-6 md:p-8"
+              className="relative w-full max-w-[900px] h-[88vh] bg-surface/95 border border-stroke rounded-3xl shadow-2xl flex flex-col overflow-hidden z-10 p-4 sm:p-6"
             >
-              {/* Top Row Controls */}
-              <div className="flex justify-between items-center pb-4 border-b border-stroke shrink-0">
+              {/* Top Control Bar */}
+              <div className="flex justify-between items-center pb-4 mb-4 border-b border-stroke shrink-0">
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[10px] sm:text-xs text-muted font-mono uppercase tracking-[0.2em]">
+                  <span className="text-[10px] sm:text-xs text-muted font-mono uppercase tracking-[0.em]">
                     Curriculum Vitae
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  {/* Download & View Resume CTA */}
+                <div className="flex items-center gap-3">
+                  {/* Direct Download Button CTA */}
                   <a
                     href="/Mayank_s_Resume (1).pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-[10px] sm:text-[15px] font-mono font-semibold uppercase tracking-wider text-[#89AACC] hover:text-text-primary hover:underline transition-all"
+                    download="Mayank_Kumar_Resume.pdf"
+                    className="flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-wider text-bg bg-[#89AACC] hover:bg-[#4E85BF] hover:text-white px-4 py-2 rounded-full transition-all duration-300 shadow-md"
                   >
-                    <Eye className="w-3.5 h-3.5" />
                     <Download className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Resume</span>
+                    <span>Download PDF</span>
                   </a>
 
                   {/* Close button */}
@@ -173,155 +176,13 @@ function MainPortfolioContent() {
                 </div>
               </div>
 
-              {/* Scrollable resume container */}
-              <div className="flex-1 overflow-y-auto custom-scrollbar py-6 pr-1 flex flex-col gap-8 font-sans">
-                {/* Profile header block */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-bg/50 p-6 rounded-2xl border border-stroke">
-                  <div>
-                    <h2 className="text-3xl font-display italic text-text-primary">
-                      Mayank Kumar
-                    </h2>
-                    <p className="text-xs sm:text-sm text-[#89AACC] font-mono uppercase tracking-widest mt-1">
-                      AI/ML Engineer & Developer
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5 text-[12px] text-muted font-mono">
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-3.5 h-3.5 text-[#4E85BF]" />
-                      <span>mayankjangra2015@gmail.com</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-[#4E85BF]" />
-                      <span>Haryana, India</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Grid columns section */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {/* Left core column: Skills & Education */}
-                  <div className="md:col-span-1 flex flex-col gap-8">
-                    {/* Focus expertise skills pills */}
-                    <div>
-                      <h3 className="text-xs font-mono font-bold tracking-widest text-[#89AACC] uppercase pb-2 border-b border-stroke mb-4 flex items-center gap-2">
-                        <CheckCircle className="w-3.5 h-3.5" /> Skills
-                      </h3>
-                      <div className="flex flex-wrap gap-1.5">
-                        {[
-                          "Languages: Python, C++, SQL, HTML, CSS",
-                          "Libraries/Frameworks: NumPy, Pandas, Scikit-learn, Matplotlib, Seaborn, React.js",
-                          "Data Science & ML: Data Preprocessing, Exploratory Data Analysis (EDA), Model Building, Model Evaluation",
-                          "AI: Prompt Engineering, Generative AI, LLMs, Agentic AI & n8n",
-                          "Tools/Platforms: Git, GitHub, Jupyter Notebook, VS Code, Google Colab, Docker",
-                          // "Core CS: DSA, OOPs, OS, DBMS, Networks",
-                          // "Soft Skills: Problem Solving, Leadership, Team Collaboration, Quick Learner, Consistency & Discipline",
-                          "Graphic Designing, Video Editing",
-                        ].map((skill) => (
-                          <span
-                            key={skill}
-                            className="bg-stroke/60 font-mono text-[9px] text-text-primary px-3 py-1 rounded-md border border-stroke hover:border-text-primary/30 hover:bg-bg transition-colors cursor-default"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Educational background */}
-                    <div>
-                      <h3 className="text-xs font-mono font-bold tracking-widest text-[#89AACC] uppercase pb-2 border-b border-stroke mb-4 flex items-center gap-2">
-                        <GraduationCap className="w-4 h-4" /> Education
-                      </h3>
-                      <div className="flex flex-col gap-4">
-                        <div>
-                          <div className="text-[10px] text-muted font-mono">2023 – 2027</div>
-                          <h4 className="text-sm font-semibold text-text-primary mt-0.5">
-                            BTech in CSE ( AI & ML )
-                          </h4>
-                          <p className="text-xs text-muted font-light">Kurukshetra University, Kurukshetra</p>
-                        </div>
-                        {/* <div>
-                          <div className="text-[10px] text-muted font-mono">2023</div>
-                          <h4 className="text-sm font-semibold text-text-primary mt-0.5">
-                            High School
-                          </h4>
-                          <p className="text-xs text-muted font-light">CBSE</p>
-                        </div> */}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right core column (span 2): Experiences */}
-                  <div className="md:col-span-2 flex flex-col gap-6">
-                    <h3 className="text-xs font-mono font-bold tracking-widest text-[#89AACC] uppercase pb-2 border-b border-stroke mb-2 flex items-center gap-2">
-                      <Briefcase className="w-4 h-4" /> Experience History
-                    </h3>
-
-                    <div className="flex flex-col gap-6">
-                      {/* Job 1 */}
-                      <div>
-                        <div className="flex justify-between items-baseline gap-2">
-                          <h4 className="text-base font-semibold text-text-primary">
-                            AI Engineer Intern ( Remote )
-                          </h4>
-                          <span className="text-[10px] text-[#4E85BF] font-mono shrink-0">
-                            June – July 2026
-                          </span>
-                        </div>
-                        <div className="text-xs text-muted font-mono uppercase tracking-wide mt-0.5">
-                          TechZolo 
-                        </div>
-                        <p className="text-xs text-muted mt-2 font-light leading-relaxed">
-                          Work with the development team on technical tasks related to AI
-systems, automation tools, and platform development.
-                        </p>
-                      </div>
-
-                      {/* Job 2 */}
-                      <div>
-                        <div className="flex justify-between items-baseline gap-2">
-                          <h4 className="text-base font-semibold text-text-primary">
-                            Project Intern - Machine Learning ( Remote )
-                          </h4>
-                          <span className="text-[10px] text-[#4E85BF] font-mono shrink-0">
-                            July - August 2025
-                          </span>
-                        </div>
-                        <div className="text-xs text-muted font-mono uppercase tracking-wide mt-0.5">
-                          Fox Trading Solution
-                        </div>
-                        <p className="text-xs text-muted mt-2 font-light leading-relaxed">
-                          Developed and evaluated ML models for diabetes prediction, human action detection, and bike-sharing demand forecast.
-                        </p>
-                      </div>
-
-                      {/* Job 3 */}
-                      <div>
-                        <div className="flex justify-between items-baseline gap-2">
-                          <h4 className="text-base font-semibold text-text-primary">
-                            Training and Internship program - AI/ML ( Hybrid )
-                          </h4>
-                          <span className="text-[10px] text-[#4E85BF] font-mono shrink-0">
-                            July 2024
-                          </span>
-                        </div>
-                        <div className="text-xs text-muted font-mono uppercase tracking-wide mt-0.5">
-                          SkillifyMe 
-                        </div>
-                        <p className="text-xs text-muted mt-2 font-light leading-relaxed">
-                          Learned Artificial Intelligence & Machine Learning concepts using Python and build a Loan Approval Prediction model.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom decorative verification */}
-                <div className="flex justify-center items-center py-4 bg-surface rounded-xl border border-stroke font-mono text-[9px] text-muted">
-                  <Award className="w-3.5 h-3.5 text-[#89AACC] mr-2" />
-                  <span>MAYANK KUMAR PORTFOLIO • CERTIFIED AUTHENTIC</span>
-                </div>
+              {/* Embedded Resume PDF Viewer */}
+              <div className="flex-1 w-full h-full rounded-2xl overflow-hidden bg-bg border border-stroke/50">
+                <iframe
+                  src="/Mayank_s_Resume (1).pdf#toolbar=1"
+                  title="Mayank Kumar Resume PDF"
+                  className="w-full h-full border-none rounded-2xl"
+                />
               </div>
             </motion.div>
           </div>
