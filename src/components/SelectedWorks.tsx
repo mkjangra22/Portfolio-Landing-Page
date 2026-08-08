@@ -7,13 +7,13 @@ const PROJECTS: Project[] = [
   {
     id: "proj-1",
     title: "AutoMark",
-    category: "Face Recognition Attendance System",
+    category: "Smart Attendance System",
     image: "Automark_project.png",
     aspectRatio: "aspect-[16/10]",
     colSpan: "md:col-span-6",
     description: "Attendance management system that uses face recognition to automatically detect and mark student attendance with real-time monitoring, secure data handling, and reduced manual effort.",
     role: "ML Engineer and Developer",
-    tech: "Python, Face Recognition, Firebase, HTML & CSS",
+    tech: "Python • OpenCV • Firebase • React.js",
     client: "Attendance Automation Prototype (Internal)",
   },
   {
@@ -25,7 +25,7 @@ const PROJECTS: Project[] = [
     colSpan: "md:col-span-6",
     description: "All-in-one campus platform for students to manage attendance, lecture schedules, assignments, results, eventts, marketplace, and student community interactions with smart assistant support and real-time updates.",
     role: "AI and Developer",
-    tech: "Python, LLM APIs, HTML & CSS, Firebase",
+    tech: "LLM APIs • React.js • Firebase",
     client: "University Campus Management (Prototype)",
   },
   {
@@ -37,19 +37,19 @@ const PROJECTS: Project[] = [
     colSpan: "md:col-span-6",
     description: "A cricket data analysis and visualization system to analyze player and match statistics.",
     role: "Data Analyst / Visualization Developer",
-    tech: "Python, Pandas, Matplotlib",
+    tech: "Python • Pandas • Numpy • Matplotlib",
     client: "Sports Analytics (Personal Project)",
   },
   {
     id: "proj-4",
     title: "Web Development Projects",
-    category: "Abstract Packaging",
+    category: "",
     image: "webpage.png",
     aspectRatio: "md:aspect-[16/10]",
     colSpan: "md:col-span-6",
-    description: "Created responsive portfolio and e-commerce webpages with auth system, payment gateway, API key integration.",
+    description: "Created responsive portfolio, E-commerce and  webpages with auth system, payment gateway, API key integration.",
     role: "Frontend Developer",
-    tech: "HTML • CSS • JavaScript • Auth • Payments • API Integration",
+    tech: "HTML/CSS • React.js • Auth • Payment Gateway • APIs",
     client: "Multiple Client Websites (Portfolio/Products)",
   },
 ];
@@ -61,7 +61,7 @@ export default function SelectedWorks() {
   return (
     <section id="work" className="bg-bg py-20 md:py-28 font-sans">
       <div className="max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16">
-        
+
         {/* Header with Framer Motion scroll animation */}
         <motion.div
           id="work-header"
@@ -79,12 +79,12 @@ export default function SelectedWorks() {
                 My Work
               </span>
             </div>
-            
+
             {/* Heading */}
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-light tracking-tight text-text-primary">
               Featured <span className="font-display italic">projects</span>
             </h2>
-            
+
             {/* Subtext */}
             <p className="text-muted mt-3 text-sm">
               A selection of projects I've worked on, from concept to launch.
@@ -224,25 +224,28 @@ export default function SelectedWorks() {
 
                 {/* Meta details mock lists */}
                 <div className="flex flex-col gap-4 mt-8 pt-6 border-t border-stroke text-xs text-muted font-sans font-light">
+                  {/* ROLE:
                   <div className="flex justify-between">
                     <span className="font-medium text-text-primary flex items-center gap-1.5 font-mono">
                       <Layout className="w-3.5 h-3.5" /> ROLE:
                     </span>
                     <span>{selectedProject.role ?? "—"}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium text-text-primary flex items-center gap-1.5 font-mono">
-                      <Layers className="w-3.5 h-3.5" /> TECH:
+                  */}
+                  <div className="flex justify-between items-start gap-4">
+                    <span className="font-medium text-text-primary flex items-center gap-1.5 font-mono shrink-0 whitespace-nowrap">
+                      <Layers className="w-3.5 h-3.5" /> TECH STACK:
                     </span>
-                    <span>{selectedProject.tech ?? "—"}</span>
+                    <span className="text-right">{selectedProject.tech ?? "—"}</span>
                   </div>
+                  {/* CLIENT:
                   <div className="flex justify-between">
                     <span className="font-medium text-text-primary flex items-center gap-1.5 font-mono">
                       <Compass className="w-3.5 h-3.5" /> CLIENT:
                     </span>
                     <span>{selectedProject.client ?? "—"}</span>
                   </div>
-
+                  */}
                 </div>
 
                 {/* Action button */}

@@ -46,35 +46,35 @@ const ACHIEVEMENTS: JournalEntry[] = [
     title: "Vice Chair",
     category: "ACM Student Chapter PIET",
     image: "acm.jpeg",
-    date: "",
+    date: "2025-26",
   },
   {
     id: "ach-2",
     title: "Technical Head",
     category: "Google Developer Group on Campus PIET",
     image: "gdg.jpg",
-    date: "",
+    date: "2025-26",
   },
   {
     id: "ach-3",
     title: "Team Lead",
     category: "Log10 Technical club",
     image: "log10.jpeg",
-    date: "",
+    date: "2024-26",
   },
   {
     id: "ach-4",
     title: "SIH - Finalist 2024, 25",
     category: "Smart Indian Hackathon",
     image: "sih.png",
-    date: "",
+    date: "2024 & 2025",
   },
   {
     id: "ach-5",
     title: "TechSprint Hackathon Winner",
     category: "Google Developer Group",
     image: "h2s.jpg",
-    date: "",
+    date: "Jan 2026",
   }
 ];
 
