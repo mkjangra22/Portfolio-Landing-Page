@@ -26,8 +26,14 @@ export interface ExplorationItem {
   id: string;
   title: string;
   image: string;
+  images: string[];
   category: string;
   rotation: string;
+  description: string;
+  role?: string;
+  tech: string[];
+  link?: string;
+  github?: string;
 }
 
 export interface StatItem {

@@ -20,8 +20,8 @@ export default function Navbar({ activeSection, onNavigate, onResumeClick }: Nav
 
   const links = [
     { label: "Home", target: "home" },
-    { label: "Projects", target: "projects" },
-    { label: "Recognition", target: "recognition" },
+    // { label: "Projects", target: "projects" },
+    // { label: "Recognition", target: "recognition" },
     { label: "Connect", target: "contact" },
   ];
 

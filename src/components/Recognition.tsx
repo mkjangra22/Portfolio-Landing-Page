@@ -78,14 +78,14 @@ const ACHIEVEMENTS: JournalEntry[] = [
   }
 ];
 
-export default function Journal() {
+export default function Recognition() {
   return (
     <section id="recognition" className="bg-bg py-20 md:py-28 font-sans border-t border-stroke/40">
       <div className="max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16">
         
         {/* Header */}
         <motion.div
-          id="journal-header"
+          id="recognition-header"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
@@ -107,11 +107,12 @@ export default function Journal() {
 
           {/* Subtext */}
           <p className="text-muted mt-3 text-sm">
-            Professional certifications, course accreditations, and key engineering recognitions.</p>
+            Professional certifications, course accreditations, and key engineering recognitions.
+          </p>
         </motion.div>
 
         {/* 2-Column Grid Layout: Certifications (Left) vs Achievements (Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-12" id="journal-list">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-12" id="recognition-list">
           
           {/* Left Column: Certifications */}
           <div className="flex flex-col gap-6">

@@ -7,9 +7,8 @@ import { X, Award, Briefcase, GraduationCap, Download, Eye, CheckCircle, Mail, M
 import LoadingScreen from "./components/LoadingScreen";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-// import SelectedWorks from "./components/SelectedWorks";
-import Explorations from "./components/Explorations";
-import Journal from "./components/Journal";
+import Projects from "./components/Projects";
+import Recognition from "./components/Recognition";
 import Stats from "./components/Stats";
 import Footer from "./components/Footer";
 
@@ -105,11 +104,11 @@ function MainPortfolioContent() {
           <Stats />
           */}
 
-          {/* Section 4: Explorations */}
-          <Explorations />
+          {/* Projects Section */}
+          <Projects />
 
-          {/* Section 5: Journal */}
-          <Journal />
+          {/* Recognition Section */}
+          <Recognition />
 
           {/* Section 6: Contact / Footer */}
           <Footer />
