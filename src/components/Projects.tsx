@@ -19,7 +19,7 @@ const PROJECTS: ExplorationItem[] = [
     description:
       "All-in-one campus platform for students to manage attendance, lecture schedules, assignments, results, events, marketplace, and student community interactions with smart AI assistant support and real-time updates.",
     role: "AI & Fullstack Developer",
-    tech: ["LLM APIs", "React.js", "Firebase", "Tailwind CSS", "Node.js"],
+    tech: ["LLM APIs", "React.js", "Firebase", "Tailwind CSS", ],
     link: "https://unihub-ai.vercel.app/",
     github: "https://github.com/mkjangra22",
   },
@@ -33,7 +33,7 @@ const PROJECTS: ExplorationItem[] = [
     description:
       "Attendance management system that uses face recognition to automatically detect and mark student attendance with real-time monitoring, secure data handling, and reduced manual effort.",
     role: "ML Engineer & Developer",
-    tech: ["Python", "OpenCV", "Firebase", "React.js", "Machine Learning"],
+    tech: ["Python", "OpenCV", "Firebase", "React.js",],
     link: "",
     github: "https://github.com/mkjangra22",
   },
@@ -47,7 +47,7 @@ const PROJECTS: ExplorationItem[] = [
     description:
       "Smart queue management and appointment booking system designed to streamline waiting lines, manage appointments, and provide real-time updates for visitors and service providers.",
     role: "Fullstack Developer",
-    tech: ["React.js", "Node.js", "Firebase", "Tailwind CSS"],
+    tech: ["React.js", "Tailwind CSS","Supabase","Machine Learning"],
     link: "",
     github: "https://github.com/mkjangra22",
   },
@@ -75,7 +75,7 @@ const PROJECTS: ExplorationItem[] = [
     description:
       "Modern high-performance developer portfolio featuring smooth GSAP animations, dark aesthetic, interactive project gallery, and seamless responsiveness.",
     role: "Frontend Architect & Designer",
-    tech: ["React.js", "Tailwind CSS", "Framer Motion", "Deploy"],
+    tech: ["React.js", "Tailwind CSS", "Framer Motion", "Contact form", "Auto Replies"],
     link: "",
     github: "https://github.com/mkjangra22/Portfolio-Landing-Page",
   },
@@ -89,7 +89,7 @@ const PROJECTS: ExplorationItem[] = [
     description:
       "Full-featured online shopping platform featuring product catalogs, cart management, checkout flow, auth system, and API key integrations.",
     role: "Frontend & Fullstack Developer",
-    tech: ["HTML/CSS","React.js","Database", "Auth System", "Payment Gateway", "APIs","Domain" ],
+    tech: ["HTML/CSS","React.js","Database", "Auth System", "Payment Gateway", "APIs","Domain", "Deployment"],
     link: "",
     github: "https://github.com/mkjangra22",
   },
