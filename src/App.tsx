@@ -7,7 +7,7 @@ import { X, Award, Briefcase, GraduationCap, Download, Eye, CheckCircle, Mail, M
 import LoadingScreen from "./components/LoadingScreen";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import SelectedWorks from "./components/SelectedWorks";
+// import SelectedWorks from "./components/SelectedWorks";
 import Explorations from "./components/Explorations";
 import Journal from "./components/Journal";
 import Stats from "./components/Stats";
@@ -31,7 +31,7 @@ function MainPortfolioContent() {
   useEffect(() => {
     if (isLoading) return;
 
-    const sections = ["home", "work", "journal", "contact"];
+    const sections = ["home", "projects", "recognition", "contact"];
     const observerOptions = {
       root: null,
       rootMargin: "-25% 0px -55% 0px", // triggers when section is visually dominant
@@ -105,12 +105,8 @@ function MainPortfolioContent() {
           <Stats />
           */}
 
-          {/* Section 3: Selected Works */}
-          <SelectedWorks />
-
-          {/* Section 4: Explorations
+          {/* Section 4: Explorations */}
           <Explorations />
-          */}
 
           {/* Section 5: Journal */}
           <Journal />

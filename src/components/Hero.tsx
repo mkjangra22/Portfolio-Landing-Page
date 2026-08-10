@@ -164,7 +164,7 @@ export default function Hero({ startAnimation, onNavigate }: HeroProps) {
           {/* Button 1: Solid See Works */}
           <button
             id="hero-cta-works"
-            onClick={() => onNavigate("work")}
+            onClick={() => onNavigate("projects")}
             className="group relative inline-flex items-center justify-center rounded-full text-sm font-semibold px-7 py-3.5 hover:scale-105 transition-transform duration-300 bg-text-primary text-bg cursor-pointer"
           >
             {/* Gradient border ring on hover */}

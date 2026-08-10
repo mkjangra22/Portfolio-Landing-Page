@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, AnimatePresence } from "motion/react";
 import { ExplorationItem } from "../types";
-import { X, Dribbble, Compass, RefreshCw, ZoomIn } from "lucide-react";
+import { X, Dribbble, Compass, ZoomIn } from "lucide-react";
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -11,44 +11,44 @@ gsap.registerPlugin(ScrollTrigger);
 const EXPLORATIONS: ExplorationItem[] = [
   {
     id: "exp-1",
-    title: "Vapor Obelisk",
-    image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&q=80&w=600",
-    category: "CGI Structure",
+    title: "UniHub",
+    image: "UniHub.png",
+    category: "Campus Assistant",
     rotation: "-rotate-3 hover:rotate-1",
   },
   {
     id: "exp-2",
-    title: "Helios Minimal",
-    image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=600",
-    category: "Organic Geometry",
+    title: "AutoMark",
+    image: "AutoMark.png",
+    category: "Smart Attendance System",
     rotation: "rotate-2 hover:-rotate-1",
   },
   {
     id: "exp-3",
-    title: "Tension Wave",
-    image: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=600",
-    category: "Matte Mesh",
+    title: "LineUp",
+    image: "LineUp (7).png",
+    category: "Queue Management System",
     rotation: "-rotate-2 hover:rotate-2",
   },
   {
     id: "exp-4",
-    title: "Liquid Core",
-    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=600",
-    category: "Fluid Simulation",
+    title: "Cricket Analyzer",
+    image: "Cricket Analyzer.png",
+    category: "Dashboard & Analytics",
     rotation: "rotate-4 hover:-rotate-2",
   },
   {
     id: "exp-5",
-    title: "Bento Monolith",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=600",
-    category: "Brutalist Study",
+    title: "Portfolio",
+    image: "Portfolio new Logo.png",
+    category: "Personal & Business",
     rotation: "-rotate-4 hover:rotate-1",
   },
   {
     id: "exp-6",
-    title: "Chroma Prism",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=600",
-    category: "Prismatic Material",
+    title: "E-Commerce",
+    image: "Ecommerce.png",
+    category: "Shopping Platform",
     rotation: "rotate-3 hover:-rotate-1",
   },
 ];
@@ -124,7 +124,7 @@ export default function Explorations() {
   return (
     <section
       ref={containerRef}
-      id="explorations"
+      id="projects"
       className="relative min-h-[250vh] bg-bg w-full overflow-hidden"
     >
       {/* LAYER 1: PINNED BACKGROUND CENTER TITLE BLOCK */}
@@ -134,18 +134,18 @@ export default function Explorations() {
       >
         <div className="max-w-xl pointer-events-auto flex flex-col items-center">
           {/* Eyebrow */}
-          <span className="accent-gradient bg-clip-text text-transparent text-[10px] sm:text-xs uppercase tracking-[0.3em] font-bold mb-4 font-mono">
-            Explorations
+          <span className="inline-block accent-gradient-text text-[10px] sm:text-xs uppercase tracking-[0.3em] font-bold mb-4 font-mono">
+            My Work
           </span>
 
           {/* Heading */}
           <h2 className="text-5xl sm:text-6xl md:text-7xl font-sans font-light text-text-primary tracking-tight leading-none mb-4">
-            Visual <span className="font-display italic">playground</span>
+            Featured <span className="font-display italic">Projects</span>
           </h2>
 
           {/* Subtext */}
-          <p className="text-muted/80 text-xs sm:text-sm max-w-sm mb-6 leading-relaxed">
-            Unregulated aesthetic experiments, material renderings, and brutalist geometric layout drafts from daily practice.
+          <p className="text-muted/80 text-xs sm:text-sm  mb-6 leading">
+           A selection of projects I've worked on, from concept to launch.
           </p>
 
           {/* Dribbble CTA Button
@@ -304,11 +304,6 @@ export default function Explorations() {
                   <h3 className="text-xl font-display italic text-text-primary">
                     {lightboxItem.title}
                   </h3>
-                </div>
-
-                <div className="flex items-center gap-1 font-mono text-[9px] text-muted">
-                  <RefreshCw className="w-3 h-3 text-[#4E85BF] animate-spin" style={{ animationDuration: "6s" }} />
-                  <span>3D RENDERING NODES</span>
                 </div>
               </div>
             </motion.div>

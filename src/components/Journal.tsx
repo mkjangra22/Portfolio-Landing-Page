@@ -80,7 +80,7 @@ const ACHIEVEMENTS: JournalEntry[] = [
 
 export default function Journal() {
   return (
-    <section id="journal" className="bg-bg py-20 md:py-28 font-sans border-t border-stroke/40">
+    <section id="recognition" className="bg-bg py-20 md:py-28 font-sans border-t border-stroke/40">
       <div className="max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16">
         
         {/* Header */}
