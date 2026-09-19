@@ -2,10 +2,9 @@ name: Keep Supabase Active
 
 on:
   schedule:
-    # Runs every day at approximately 9:00 AM IST
+    # Every day at approximately 9:00 AM IST
     - cron: "30 3 * * *"
 
-  # Allows us to test it manually
   workflow_dispatch:
 
 jobs:
@@ -16,5 +15,5 @@ jobs:
       - name: Ping Supabase Database
         run: |
           curl --fail --show-error \
-            "https://wdadebqxntvoealbqyi.supabase.co/rest/v1/keep_alive?select=id,status&limit=1" \
+            "https://snyhaspyjxcjonejajdg.supabase.co/rest/v1/keep_alive?select=id,status&limit=1" \
             -H "apikey: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}"
